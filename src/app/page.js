@@ -18,9 +18,11 @@ export default function Home() {
 
  const handleSubmit = async (e) => {
    e.preventDefault()
+   console.log('Form submitted')
    const formData = new FormData(e.currentTarget)
    
    try {
+     console.log('Processing form data')
      const detectedGender = formData.get('firstName') ? 
        genderDetection.detect(formData.get('firstName')) : 
        null;
@@ -57,6 +59,8 @@ export default function Home() {
          last_abandoned_product: formData.get('lastAbandonedProduct') || null
        }])
 
+     if (metricsError) throw metricsError
+
      if (formData.get('interactionType')) {
        const { error: serviceError } = await supabase
          .from('service_interactions')
@@ -77,12 +81,14 @@ export default function Home() {
          created_at: formData.get('lastEmailInteraction') || new Date().toISOString()
        }])
 
-     if (metricsError || marketingError) throw error
+     if (marketingError) throw marketingError
 
+     console.log('Form processed successfully')
      setMessage('User created successfully!')
      e.target.reset()
      setSelectedIndustry('')
    } catch (error) {
+     console.error('Submission error:', error)
      setMessage('Error: ' + error.message)
    }
  }
