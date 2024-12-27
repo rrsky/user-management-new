@@ -13,6 +13,7 @@ const isValidDate = (date) => {
 
 export default function Home() {
  const [message, setMessage] = useState('')
+ const [selectedIndustry, setSelectedIndustry] = useState('')
 
  const handleSubmit = async (e) => {
    e.preventDefault()
@@ -24,6 +25,8 @@ export default function Home() {
        .insert([{
          email: formData.get('email'),
          marketing_opt_in: formData.get('optIn') === 'yes',
+         industry: formData.get('industry'),
+         business_type: formData.get('businessType') || null,
          personal_info: {
            first_name: formData.get('firstName') || null,
            last_name: formData.get('lastName') || null,
@@ -72,6 +75,7 @@ export default function Home() {
 
      setMessage('User created successfully!')
      e.target.reset()
+     setSelectedIndustry('')
    } catch (error) {
      setMessage('Error: ' + error.message)
    }
@@ -91,6 +95,43 @@ export default function Home() {
        )}
 
        <form onSubmit={handleSubmit} className="space-y-6">
+         <div className="space-y-4">
+           <h2 className="text-xl font-medium text-black">Business Information</h2>
+           <div>
+             <label className="block text-black font-medium mb-2">Industry *</label>
+             <select
+               name="industry"
+               required
+               onChange={(e) => setSelectedIndustry(e.target.value)}
+               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+             >
+               <option value="">Select Industry</option>
+               <option value="eCommerce">eCommerce</option>
+               <option value="Travel Bookings">Travel Bookings</option>
+               <option value="Beauty Bookings">Beauty Bookings</option>
+               <option value="Services">Services</option>
+             </select>
+           </div>
+           
+           {selectedIndustry === 'eCommerce' && (
+             <div>
+               <label className="block text-black font-medium mb-2">Type of Business *</label>
+               <select
+                 name="businessType"
+                 required
+                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+               >
+                 <option value="">Select Type</option>
+                 <option value="Food & Drinks">Food & Drinks</option>
+                 <option value="Home">Home</option>
+                 <option value="Fashion">Fashion</option>
+                 <option value="Electronics">Electronics</option>
+                 <option value="Other">Other</option>
+               </select>
+             </div>
+           )}
+         </div>
+
          <div className="space-y-4">
            <h2 className="text-xl font-medium text-black">Customer Details</h2>
            <input
