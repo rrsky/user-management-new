@@ -101,8 +101,217 @@ export default function Home() {
        )}
 
        <form onSubmit={handleSubmit} className="space-y-6">
-         {/* Rest of the form remains exactly the same */}
-         {/* ... Previous form JSX ... */}
+         <div className="space-y-4">
+           <h2 className="text-xl font-medium text-black">Business Information</h2>
+           <div>
+             <label className="block text-black font-medium mb-2">Industry *</label>
+             <select
+               name="industry"
+               required
+               onChange={(e) => setSelectedIndustry(e.target.value)}
+               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+             >
+               <option value="">Select Industry</option>
+               <option value="eCommerce">eCommerce</option>
+               <option value="Travel Bookings">Travel Bookings</option>
+               <option value="Beauty Bookings">Beauty Bookings</option>
+               <option value="Services">Services</option>
+             </select>
+           </div>
+           
+           {selectedIndustry === 'eCommerce' && (
+             <div>
+               <label className="block text-black font-medium mb-2">Type of Business *</label>
+               <select
+                 name="businessType"
+                 required
+                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+               >
+                 <option value="">Select Type</option>
+                 <option value="Food & Drinks">Food & Drinks</option>
+                 <option value="Home">Home</option>
+                 <option value="Fashion">Fashion</option>
+                 <option value="Electronics">Electronics</option>
+                 <option value="Other">Other</option>
+               </select>
+             </div>
+           )}
+         </div>
+
+         <div className="space-y-4">
+           <h2 className="text-xl font-medium text-black">Customer Details</h2>
+           <input
+             type="email"
+             name="email"
+             placeholder="Email *"
+             required
+             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+           />
+           <div className="grid grid-cols-2 gap-4">
+             <input
+               type="text"
+               name="firstName"
+               placeholder="First Name"
+               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+             />
+             <input
+               type="text"
+               name="lastName"
+               placeholder="Last Name"
+               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+             />
+           </div>
+           <input
+             type="number"
+             name="age"
+             placeholder="Age"
+             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+           />
+           <input
+             type="text"
+             name="location"
+             placeholder="Location"
+             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+           />
+           <input
+             type="text"
+             name="language"
+             placeholder="Preferred Language"
+             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+           />
+         </div>
+
+         <div className="space-y-4">
+           <h2 className="text-xl font-medium text-black">Purchase History</h2>
+           <input
+             type="number"
+             name="totalPurchases"
+             placeholder="Total number of purchases"
+             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+           />
+           <input
+             type="text"
+             name="lastPurchasedProduct"
+             placeholder="Name of last purchased product"
+             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+           />
+           <select
+             name="purchaseFrequency"
+             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+           >
+             <option value="">Select Purchase Frequency</option>
+             <option value="increasing">Increasing</option>
+             <option value="stable">Stable</option>
+             <option value="decreasing">Decreasing</option>
+           </select>
+           <div>
+             <label className="block text-black font-medium mb-2">Last Purchase Date</label>
+             <input
+               type="date"
+               name="lastPurchaseDate"
+               max={new Date().toISOString().split('T')[0]}
+               onChange={(e) => {
+                 if (!isValidDate(e.target.value)) {
+                   e.target.value = '';
+                   setMessage('Please select a date in the past or today');
+                 }
+               }}
+               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+             />
+           </div>
+           <div className="space-y-2">
+             <label className="text-black font-medium">Cart abandonment in the last 7 days</label>
+             <div className="flex gap-6">
+               <label className="flex items-center">
+                 <input type="radio" name="cartAbandonment" value="yes" className="mr-2"/>
+                 <span className="text-black">Yes</span>
+               </label>
+               <label className="flex items-center">
+                 <input type="radio" name="cartAbandonment" value="no" className="mr-2"/>
+                 <span className="text-black">No</span>
+               </label>
+             </div>
+           </div>
+           <input
+             type="text"
+             name="lastAbandonedProduct"
+             placeholder="Name of last abandoned product"
+             className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+           />
+         </div>
+
+         <div className="space-y-4">
+           <h2 className="text-xl font-medium text-black">Service Interactions</h2>
+           <div className="space-y-2">
+             <label className="text-black font-medium">Most Recent Interaction</label>
+             <div className="space-y-2">
+               {['support', 'complaint', 'return', 'warranty'].map((type) => (
+                 <label key={type} className="flex items-center">
+                   <input
+                     type="radio"
+                     name="interactionType"
+                     value={type}
+                     className="mr-2"
+                   />
+                   <span className="text-black capitalize">{type}</span>
+                 </label>
+               ))}
+             </div>
+           </div>
+         </div>
+
+         <div className="space-y-4">
+           <h2 className="text-xl font-medium text-black">Marketing Engagement</h2>
+           <div className="space-y-2 mb-4">
+             <label className="text-black font-medium">Marketing Opt-in *</label>
+             <div className="flex gap-6">
+               <label className="flex items-center">
+                 <input type="radio" name="optIn" value="yes" required className="mr-2"/>
+                 <span className="text-black">Yes</span>
+               </label>
+               <label className="flex items-center">
+                 <input type="radio" name="optIn" value="no" required className="mr-2"/>
+                 <span className="text-black">No</span>
+               </label>
+             </div>
+           </div>
+           <div className="grid grid-cols-2 gap-4">
+             <input
+               type="number"
+               name="emailOpens"
+               placeholder="Email opens (30 days)"
+               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+             />
+             <input
+               type="number"
+               name="emailClicks"
+               placeholder="Email clicks (30 days)"
+               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+             />
+           </div>
+           <div>
+             <label className="block text-black font-medium mb-2">Last Email Opened</label>
+             <input
+               type="date"
+               name="lastEmailInteraction"
+               max={new Date().toISOString().split('T')[0]}
+               onChange={(e) => {
+                 if (!isValidDate(e.target.value)) {
+                   e.target.value = '';
+                   setMessage('Please select a date in the past or today');
+                 }
+               }}
+               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+             />
+           </div>
+         </div>
+
+         <button
+           type="submit"
+           className="w-full p-3 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+         >
+           Create User
+         </button>
        </form>
      </div>
    </div>
