@@ -27,17 +27,36 @@ export default function Home() {
 
       if (userError) throw userError
 
-      // Create initial engagement metrics
+      // Create engagement metrics
       const { error: metricsError } = await supabase
         .from('engagement_metrics')
         .insert([{
           user_id: userData[0].id,
           total_purchases: parseInt(formData.get('totalPurchases')) || 0,
+          purchase_frequency: formData.get('purchaseFrequency'),
           last_purchase_date: formData.get('lastPurchaseDate') || null,
-          cart_abandonment_count: 0,
+          cart_abandonment_count: parseInt(formData.get('cartAbandonment')) || 0,
         }])
 
-      if (metricsError) throw metricsError
+      // Create service interactions
+      const { error: serviceError } = await supabase
+        .from('service_interactions')
+        .insert([{
+          user_id: userData[0].id,
+          type: formData.get('interactionType'),
+          status: 'completed'
+        }])
+
+      // Create marketing engagement
+      const { error: marketingError } = await supabase
+        .from('marketing_engagement')
+        .insert([{
+          user_id: userData[0].id,
+          action: 'open',
+          email_id: 'simulation',
+        }])
+
+      if (metricsError || serviceError || marketingError) throw error
 
       setMessage('User created successfully!')
       e.target.reset()
@@ -49,7 +68,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
       <div className="w-full max-w-2xl bg-white p-8 rounded-lg">
-        <h1 className="text-2xl font-semibold text-black mb-8 text-center">Create New User</h1>
+        <h1 className="text-2xl font-semibold text-black mb-8 text-center">Create User</h1>
         
         {message && (
           <div className={`p-4 mb-6 rounded text-black ${
@@ -105,10 +124,61 @@ export default function Home() {
               placeholder="Total number of purchases"
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             />
+            <select
+              name="purchaseFrequency"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            >
+              <option value="">Select Purchase Frequency</option>
+              <option value="increasing">Increasing</option>
+              <option value="stable">Stable</option>
+              <option value="decreasing">Decreasing</option>
+            </select>
             <input
               type="date"
               name="lastPurchaseDate"
-              placeholder="Last purchase date"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            />
+            <input
+              type="number"
+              name="cartAbandonment"
+              placeholder="Cart abandonment count"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl font-medium text-black">Service Interactions</h2>
+            <select
+              name="interactionType"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            >
+              <option value="">Select Most Recent Interaction</option>
+              <option value="support">Support Contact</option>
+              <option value="complaint">Complaint</option>
+              <option value="return">Return</option>
+              <option value="warranty">Warranty Claim</option>
+            </select>
+          </div>
+
+          <div className="space-y-4">
+            <h2 className="text-xl font-medium text-black">Marketing Engagement</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <input
+                type="number"
+                name="emailOpens"
+                placeholder="Email opens (30 days)"
+                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              />
+              <input
+                type="number"
+                name="emailClicks"
+                placeholder="Email clicks (30 days)"
+                className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+              />
+            </div>
+            <input
+              type="date"
+              name="lastEmailInteraction"
               className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             />
           </div>
