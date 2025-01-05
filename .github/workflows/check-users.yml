@@ -19,3 +19,4 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
       GOOGLE_EMAIL: ${{ secrets.GOOGLE_EMAIL }}
+      
