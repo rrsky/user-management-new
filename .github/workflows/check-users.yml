@@ -10,7 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-      - run: cp test.js user-management-new/ && cd user-management-new && npm install && MODE=create node test.js
+      - run: |
+          pwd
+          ls -la
+          npm install
+          MODE=create node $(pwd)/test.js
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
