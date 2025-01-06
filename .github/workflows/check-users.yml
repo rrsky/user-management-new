@@ -1,7 +1,8 @@
 name: Check New Users
 on:
   schedule:
-    - cron: '0 * * * *'  # Hourly
+    - cron: '0 * * * *'
+  workflow_dispatch:
 
 jobs:
   check-users:
@@ -9,9 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-      - run: |
-          npm install
-          MODE=create node test.js
+      - run: cp test.js user-management-new/ && cd user-management-new && npm install && MODE=create node test.js
     env:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
@@ -19,4 +18,3 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
       GOOGLE_EMAIL: ${{ secrets.GOOGLE_EMAIL }}
-      
