@@ -11,8 +11,9 @@ jobs:
      - uses: actions/checkout@v2
      - uses: actions/setup-node@v2
      - run: |
-         npm init -y
-         npm install dotenv openai @google-cloud/forms googleapis @supabase/supabase-js resend
+         cp user-management-new/package.json ./
+         npm install
+         npm install dotenv
          MODE=create node ./test.js
    env:
      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
