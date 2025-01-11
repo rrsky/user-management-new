@@ -25,14 +25,15 @@ jobs:
         run: |
           npm install --verbose
 
-      # Step 4: Clean npm cache and reinstall dependencies (optional)
-      - name: Clean npm cache and reinstall dependencies
-        run: |
-          npm cache clean --force
-          rm -rf node_modules
-          npm install --verbose
+      # Step 4: Force reinstall dotenv
+      - name: Force install dotenv
+        run: npm install dotenv --save
 
-      # Step 5: Verify if dotenv is installed
+      # Step 5: List node_modules to verify dotenv installation
+      - name: List node_modules
+        run: ls -l node_modules
+
+      # Step 6: Verify dotenv installation
       - name: Verify dotenv installation
         run: |
           if [ -f node_modules/dotenv ]; then
@@ -42,20 +43,27 @@ jobs:
             exit 1
           fi
 
-      # Step 6: Authenticate with Google Cloud
+      # Step 7: Clean npm cache and reinstall dependencies (optional)
+      - name: Clean npm cache and reinstall dependencies
+        run: |
+          npm cache clean --force
+          rm -rf node_modules
+          npm install --verbose
+
+      # Step 8: Authenticate with Google Cloud
       - name: Authenticate with Google Cloud
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
         run: |
           echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $GOOGLE_APPLICATION_CREDENTIALS
 
-      # Step 7: Debug Google Credentials
+      # Step 9: Debug Google Credentials
       - name: Debug Google Credentials
         run: |
           echo "GOOGLE_APPLICATION_CREDENTIALS path: $GOOGLE_APPLICATION_CREDENTIALS"
           ls -l $GOOGLE_APPLICATION_CREDENTIALS
 
-      # Step 8: Run the Node.js script
+      # Step 10: Run the Node.js script
       - name: Run the Node.js script
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
