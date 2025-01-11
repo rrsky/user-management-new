@@ -12,6 +12,7 @@
     "@supabase/supabase-js": "^2.47.10",
     "dotenv": "^16.4.7",
     "gender-detection": "^0.1.0",
+    "googleapis": "^144.0.0",
     "next": "15.1.2",
     "openai": "^4.78.1",
     "react": "^19.0.0",
