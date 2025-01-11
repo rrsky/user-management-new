@@ -36,7 +36,7 @@ jobs:
       # Step 6: Verify dotenv installation
       - name: Verify dotenv installation
         run: |
-          if [ -f node_modules/dotenv ]; then
+          if [ -d node_modules/dotenv ]; then
             echo "dotenv is installed"
           else
             echo "dotenv is NOT installed"
