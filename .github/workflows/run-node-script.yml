@@ -18,12 +18,14 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: '16'
 
-      # Step 3: Install dependencies (if necessary)
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: |
           npm install --verbose
+          # Check if dotenv is in node_modules
+          ls -l node_modules | grep dotenv
 
       # Step 4: Authenticate with Google Cloud
       - name: Authenticate with Google Cloud
