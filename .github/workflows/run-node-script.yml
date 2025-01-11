@@ -20,22 +20,22 @@ jobs:
         with:
           node-version: 16 # Use the Node.js version required by your project
 
-      # Step 3: Authenticate with Google Cloud
+      # Step 3: Install dependencies (including dotenv)
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Authenticate with Google Cloud
       - name: Authenticate with Google Cloud
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
         run: |
           echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $GOOGLE_APPLICATION_CREDENTIALS
 
-      # Step 4: Debug to ensure credentials are set up correctly
+      # Step 5: Debug Google Credentials
       - name: Debug Google Credentials
         run: |
           echo "GOOGLE_APPLICATION_CREDENTIALS path: $GOOGLE_APPLICATION_CREDENTIALS"
           ls -l $GOOGLE_APPLICATION_CREDENTIALS
-
-      # Step 5: Install dependencies
-      - name: Install dependencies
-        run: npm install
 
       # Step 6: Run the Node.js script
       - name: Run the Node.js script
