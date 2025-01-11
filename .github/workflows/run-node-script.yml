@@ -1,0 +1,44 @@
+name: Run Node.js Script with Google Cloud Authentication
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow on push to the main branch
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16 # Use the Node.js version required by your project
+
+      # Step 3: Authenticate with Google Cloud
+      - name: Authenticate with Google Cloud
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
+        run: |
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $GOOGLE_APPLICATION_CREDENTIALS
+
+      # Step 4: Debug to ensure credentials are set up correctly
+      - name: Debug Google Credentials
+        run: |
+          echo "GOOGLE_APPLICATION_CREDENTIALS path: $GOOGLE_APPLICATION_CREDENTIALS"
+          ls -l $GOOGLE_APPLICATION_CREDENTIALS
+
+      # Step 5: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 6: Run the Node.js script
+      - name: Run the Node.js script
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json # Ensure this is passed to your script
+        run: node test.js
