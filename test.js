@@ -34,9 +34,6 @@ async function evaluateEligibility(userData) {
    - Purchase frequency is "decreasing"
    - No purchases in last 90 days
    
-   Priority 3 (Low):
-   - No survey in last 30 days
-   
    Email rules:
    - All eligible users get survey generated
    - Email sent only if marketing_opt_in=true AND has email opens
@@ -364,17 +361,8 @@ async function run() {
       if (mode === 'create') {
         // Get only users without recent surveys
         const { data: users, error } = await supabase
-          .from('users')
-          .select(`
-            *,
-            user_last_survey (
-              last_survey_date,
-              surveys_sent
-            )
-          `)
-          .or(
-            'user_last_survey.is.null,user_last_survey.last_survey_date.lt.now-interval-30-days'
-          );
+        .from('users')
+        .select('*');
    
         if (error) throw error;
         console.log(`Found ${users?.length || 0} users to evaluate`);
