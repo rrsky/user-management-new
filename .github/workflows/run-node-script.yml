@@ -23,7 +23,7 @@ jobs:
       # Step 3: Install dependencies
       - name: Install dependencies
         run: |
-          npm install --verbose
+          npm install --no-optional
           # Check if dotenv is in node_modules
           ls -l node_modules | grep dotenv
 
