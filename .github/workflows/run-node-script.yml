@@ -24,21 +24,31 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Authenticate with Google Cloud
+      # Step 4: Check if dotenv is installed
+      - name: Verify dotenv installation
+        run: |
+          if [ -f node_modules/dotenv ]; then
+            echo "dotenv is installed"
+          else
+            echo "dotenv is NOT installed"
+            exit 1
+          fi
+
+      # Step 5: Authenticate with Google Cloud
       - name: Authenticate with Google Cloud
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
         run: |
           echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $GOOGLE_APPLICATION_CREDENTIALS
 
-      # Step 5: Debug Google Credentials
+      # Step 6: Debug Google Credentials
       - name: Debug Google Credentials
         run: |
           echo "GOOGLE_APPLICATION_CREDENTIALS path: $GOOGLE_APPLICATION_CREDENTIALS"
           ls -l $GOOGLE_APPLICATION_CREDENTIALS
 
-      # Step 6: Run the Node.js script
+      # Step 7: Run the Node.js script
       - name: Run the Node.js script
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json # Ensure this is passed to your script
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
         run: node test.js
