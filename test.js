@@ -6,7 +6,9 @@ const { Resend } = require('resend');
 const path = require('path');
 
 // Initialize clients
-const openai = new OpenAI();
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY  // Pass the API key from the environment
+});
 const resend = new Resend(process.env.RESEND_API_KEY);
 const YOUR_EMAIL = process.env.GOOGLE_EMAIL;
 
