@@ -22,10 +22,11 @@ jobs:
 
       # Step 3: Authenticate with Google Cloud
       - name: Authenticate with Google Cloud
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
         run: |
-          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $GOOGLE_APPLICATION_CREDENTIALS
+          echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}" > $HOME/gcp-key.json
+          echo "GOOGLE_APPLICATION_CREDENTIALS path: $HOME/gcp-key.json"
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcp-key.json
 
       # Step 4: Debug Google Credentials
       - name: Debug Google Credentials
@@ -36,5 +37,5 @@ jobs:
       # Step 5: Run the Node.js script
       - name: Run the Node.js script
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/gcp-key.json
+          GOOGLE_APPLICATION_CREDENTIALS: $HOME/gcp-key.json
         run: node test.js
