@@ -18,11 +18,11 @@ const supabase = createClient(
 );
 
 const auth = new google.auth.GoogleAuth({
- keyFile: process.env.GOOGLE_APPLICATION_CREDENTIALS,
- scopes: [
-   'https://www.googleapis.com/auth/forms.body',
-   'https://www.googleapis.com/auth/drive'
- ]
+  credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS), // Add this line
+  scopes: [
+    'https://www.googleapis.com/auth/forms.body',
+    'https://www.googleapis.com/auth/drive'
+  ]
 });
 
 async function evaluateEligibility(userData) {
