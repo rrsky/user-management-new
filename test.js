@@ -9,6 +9,12 @@ const path = require('path');
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY  // Pass the API key from the environment
 });
+const openai = new OpenAI();
+console.log('Environment variables:', {
+  OPENAI_KEY: process.env.OPENAI_API_KEY?.slice(0,4),
+  SUPABASE_URL: process.env.SUPABASE_URL?.slice(0,10),
+  GOOGLE_CREDS: !!process.env.GOOGLE_APPLICATION_CREDENTIALS
+});
 const resend = new Resend(process.env.RESEND_API_KEY);
 const YOUR_EMAIL = process.env.GOOGLE_EMAIL;
 
