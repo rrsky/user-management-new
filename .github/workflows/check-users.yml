@@ -1,36 +1,24 @@
 name: Check New Users
-
 on:
-  schedule:
-    - cron: '0 * * * *' # Runs the workflow every hour
-  workflow_dispatch: # Allows manual triggering of the workflow
+ schedule:
+   - cron: '0 * * * *'
+ workflow_dispatch:
 
 jobs:
-  check-users:
-    runs-on: ubuntu-latest
-    steps:
-      # Step 1: Check out the repository
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # Step 2: Set up Node.js
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20' # Use Node.js v20
-
-      # Step 3: Install dependencies and run the script
-      - name: Install dependencies and run script
-        run: |
-          pwd
-          ls -la
-          npm install dotenv openai googleapis @supabase/supabase-js resend gender-detection
-          node ./test.js
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
-          GOOGLE_EMAIL: ${{ secrets.GOOGLE_EMAIL }}
-          MODE: create
+ check-users:
+   runs-on: ubuntu-latest
+   steps:
+     - uses: actions/checkout@v2
+     - uses: actions/setup-node@v2
+     - run: |
+         pwd
+         ls -la
+         npm install
+         MODE=create node ./test.js
+       env:
+         SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+         SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+         RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+         GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+         GOOGLE_EMAIL: ${{ secrets.GOOGLE_EMAIL }}
