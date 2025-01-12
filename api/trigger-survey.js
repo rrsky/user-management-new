@@ -1,50 +1,37 @@
-const { google } = require('googleapis'); // Ensure googleapis is installed
-const OpenAI = require('openai'); // Ensure openai library is installed
-
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
-        return res.status(405).send({ error: 'Method not allowed' });
+      return res.status(405).json({ error: 'Method not allowed' });
     }
-
+  
+    const { user } = req.body;
+  
+    if (!user || !user.name) {
+      return res.status(400).json({ error: 'User data is missing or incomplete' });
+    }
+  
     try {
-        const { userEmail } = req.body;
-
-        // Step 1: Generate survey using OpenAI
-        const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-        const surveyResponse = await openai.chat.completions.create({
-            messages: [{ role: 'user', content: `Generate a survey for ${userEmail}` }],
-            model: 'gpt-4',
-        });
-
-        const surveyContent = surveyResponse.choices[0].message.content;
-
-        // Step 2: Create Google Form (use your logic)
-        const forms = google.forms({
-            version: 'v1',
-            auth: process.env.GOOGLE_API_KEY, // Add to Vercel Environment Variables
-        });
-
-        const form = await forms.forms.create({
-            requestBody: {
-                info: {
-                    title: `Survey for ${userEmail}`,
-                },
-                items: [
-                    {
-                        textItem: {
-                            question: surveyContent,
-                        },
-                    },
-                ],
-            },
-        });
-
-        // Step 3: Send the form link back or store it
-        const formLink = form.data.responderUri;
-
-        res.status(200).send({ success: true, formLink });
+      // Call OpenAI API
+      const response = await fetch('https://api.openai.com/v1/completions', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'text-davinci-003',
+          prompt: `Create a survey for the user ${user.name}. Include details about their preferences and goals.`,
+          max_tokens: 200,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        res.status(200).json({ success: true, survey: data });
+      } else {
+        res.status(500).json({ error: 'Error generating survey', details: data });
+      }
     } catch (error) {
-        console.error(error);
-        res.status(500).send({ error: 'Failed to trigger survey' });
+      res.status(500).json({ error: 'Internal server error', details: error.message });
     }
-}
+  }
