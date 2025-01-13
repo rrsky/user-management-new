@@ -1,9 +1,8 @@
 name: Check New Users
 on:
-schedule:
-  - cron: '0 * * * *'
-  if: false
- workflow_dispatch:
+  # schedule:
+  #   - cron: '0 0 * * *' # Stopped the cron job
+  workflow_dispatch:
 
 jobs:
  check-users:
