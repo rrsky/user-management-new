@@ -1,7 +1,8 @@
 name: Check New Users
 on:
- schedule:
-   - cron: '0 * * * *'
+schedule:
+  - cron: '0 * * * *'
+  if: false
  workflow_dispatch:
 
 jobs:
